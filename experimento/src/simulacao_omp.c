@@ -3,7 +3,7 @@
 #include <math.h>
 #include <omp.h>
 #include <time.h>
-#include "definicoes.h"
+#include "../include/definicoes.h"
 
 // Inicializa posições e velocidades
 void init_particles() {

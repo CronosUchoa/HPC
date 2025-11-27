@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
-#include "definicoes.h"
+#include "../include/definicoes.h"
 
 void init_particles() {
     srand(42); // Seed fixo para reprodutibilidade
@@ -63,7 +63,6 @@ int main() {
     printf("=== SIMULAÇÃO MD - VERSÃO SERIAL ===\n");
     printf("Partículas: %d\n", N);
     printf("Timesteps: %d\n\n", NSTEPS);
-    
     init_particles();
 
     start = clock();

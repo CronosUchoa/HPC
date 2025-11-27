@@ -2,7 +2,7 @@
 #define DEFINICOES_H
 
 #define N 1000
-#define NSTEPS 1000
+#define NSTEPS 10000
 #define DT 0.001
 #define EPSILON 1.0
 #define SIGMA 1.0

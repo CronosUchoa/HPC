@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <mpi.h>
-#include "definicoes.h"
+#include "../include/definicoes.h"
 
 void init_particles() {
     srand(42);
@@ -101,10 +101,6 @@ int main(int argc, char *argv[]) {
     for (int step = 0; step < NSTEPS; step++) {
         compute_forces(rank, size);
         integrate();
-        
-        if (rank == 0 && step % 100 == 0) {
-            printf("Passo %d/%d\n", step, NSTEPS);
-        }
     }
     
     MPI_Barrier(MPI_COMM_WORLD);
