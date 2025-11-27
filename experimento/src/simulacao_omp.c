@@ -3,21 +3,7 @@
 #include <math.h>
 #include <omp.h>
 #include <time.h>
-
-
-#define N 100             // número de partículas
-#define NSTEPS 100        // número de timesteps
-#define DT 0.001          // passo de tempo
-#define EPSILON 1.0       // parâmetro do potencial LJ
-#define SIGMA 1.0
-#define MASS 1.0
-
-// Estrutura para posição, velocidade e força
-typedef struct {
-    double x, y, z;
-} Vec3;
-
-Vec3 pos[N], vel[N], force[N];
+#include "definicoes.h"
 
 // Inicializa posições e velocidades
 void init_particles() {

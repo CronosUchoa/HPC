@@ -3,9 +3,11 @@
 #include "../include/simulacao.h"
 #include "../include/visualizacao.h"
 
+#define VISU 0
+
 int main(int argc, char *argv[]) {
-    int rank, size;
-    
+    int rank, size;    
+
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -16,23 +18,30 @@ int main(int argc, char *argv[]) {
     camera.zoom = 1.5f;
     
     if (rank == 0) {
-        if (!initialize_3d_graphics(&window, &gl_context)) {
-            MPI_Abort(MPI_COMM_WORLD, 1);
+
+        if (VISU)
+        {
+            if (!initialize_3d_graphics(&window, &gl_context)) {
+                MPI_Abort(MPI_COMM_WORLD, 1);
+            }
+            printf("\n=== SIMULACAO MD 3D com MPI ===\n");
+            printf("Processos MPI: %d\n", size);
+            printf("Particulas: %d\n", N);
+            printf("\nControles 3D:\n");
+            printf("  Mouse + Botao Esquerdo: Rotacionar camera\n");
+            printf("  Scroll do Mouse: Zoom\n");
+            printf("  W/S: Zoom in/out\n");
+            printf("  ESPACO: Pausar/Continuar\n");
+            printf("  R: Reiniciar simulacao\n");
+            printf("  ESC: Sair\n\n");
+            
+        }
+        else{
+            printf("\n=== SIMULACAO MD com MPI ===\n");
+            printf("Processos MPI: %d\n", size);
+            printf("Particulas: %d\n", N);
         }
         
-        printf("\n=== SIMULACAO MD 3D com MPI ===\n");
-        printf("Processos MPI: %d\n", size);
-        printf("Particulas: %d\n", N);
-        printf("\nControles 3D:\n");
-        printf("  Mouse + Botao Esquerdo: Rotacionar camera\n");
-        printf("  Scroll do Mouse: Zoom\n");
-        printf("  W/S: Zoom in/out\n");
-        printf("  ESPACO: Pausar/Continuar\n");
-        printf("  R: Reiniciar simulacao\n");
-        printf("  ESC: Sair\n\n");
-    }
-    
-    if (rank == 0) {
         init_particles();
     }
     
@@ -43,9 +52,13 @@ int main(int argc, char *argv[]) {
     int paused = 0;
     double start_time = MPI_Wtime();
     
-    while (running) {
+    // Com visualização
+    while (step <= NSTEPS && running && VISU) {
+        
         if (rank == 0) {
+            
             int input_result = handle_3d_input(&camera, &paused);
+            
             if (input_result == -1) {
                 running = 0;
             } else if (input_result == 1) {
@@ -64,13 +77,6 @@ int main(int argc, char *argv[]) {
             compute_forces(rank, size);
             integrate_step();
             step++;
-            
-            if (rank == 0 && step % 100 == 0) {
-                double ke = calculate_kinetic_energy();
-                double elapsed = MPI_Wtime() - start_time;
-                printf("Passo: %5d | Energia: %8.4f | FPS: %6.1f\n", 
-                       step, ke, step / elapsed);
-            }
         }
         
         if (rank == 0) {
@@ -80,6 +86,26 @@ int main(int argc, char *argv[]) {
         
         MPI_Barrier(MPI_COMM_WORLD);
     }
+
+    // Sem visualização
+    while (step <= NSTEPS && !VISU) {
+        
+        MPI_Bcast(&step, 1, MPI_INT, 0, MPI_COMM_WORLD);
+            
+        compute_forces(rank, size);
+        integrate_step();
+        step++;
+    
+        MPI_Barrier(MPI_COMM_WORLD);
+    }
+
+
+
+
+
+
+
+
     
     if (rank == 0) {
         double total_time = MPI_Wtime() - start_time;
@@ -88,8 +114,11 @@ int main(int argc, char *argv[]) {
         printf("Processos MPI: %d\n", size);
         printf("Passos simulados: %d\n", step);
         printf("Performance: %.1f passos/segundo\n", step / total_time);
-        
+    
+    
         cleanup_3d_graphics(window, gl_context);
+        
+        
     }
     
     MPI_Finalize();
