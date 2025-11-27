@@ -1,0 +1,15 @@
+#ifndef DEFINICOES_H
+#define DEFINICOES_H
+
+#define N 2000
+#define NSTEPS 20000
+#define DT 0.001
+#define EPSILON 1.0
+#define SIGMA 1.0
+#define MASS 1.0
+
+typedef struct {
+    double x, y, z;
+} Vec3;
+Vec3 pos[N], vel[N], force[N];
+#endif

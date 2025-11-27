@@ -3,13 +3,14 @@
 
 #include <mpi.h>
 
-#define N 50
-#define NSTEPS 100000
+#define N 500
+#define NSTEPS 10000
 #define DT 0.05
 #define EPSILON 5
 #define SIGMA 0.5
 #define MASS 1.0
 #define BOX_SIZE 5.0
+
 
 typedef struct {
     double x, y, z;
