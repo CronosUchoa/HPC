@@ -1,8 +1,8 @@
 #ifndef DEFINICOES_H
 #define DEFINICOES_H
 
-#define N 2000
-#define NSTEPS 20000
+#define N 4000
+#define NSTEPS 10000
 #define DT 0.001
 #define EPSILON 1.0
 #define SIGMA 1.0

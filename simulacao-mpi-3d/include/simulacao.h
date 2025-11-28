@@ -3,7 +3,7 @@
 
 #include <mpi.h>
 
-#define N 500
+#define N 50
 #define NSTEPS 10000
 #define DT 0.05
 #define EPSILON 5
