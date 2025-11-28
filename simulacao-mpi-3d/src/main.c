@@ -3,7 +3,7 @@
 #include "../include/simulacao.h"
 #include "../include/visualizacao.h"
 
-#define VISU 0
+#define VISU 1
 
 int main(int argc, char *argv[]) {
     int rank, size;    
